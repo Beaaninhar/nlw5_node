@@ -1,5 +1,5 @@
 const socket = io();
-
+let connectionInSupport = [];
 let connectionsUsers = [];
 
 socket.on("admin_list_all_users", (connections) => {
@@ -19,9 +19,9 @@ socket.on("admin_list_all_users", (connections) => {
 });
 
 function call(id) {
-  const connection = connectionsUsers.find(
-    (connection) => connection.socket_id === id
-  );
+  const connection = connectionsUsers.find(connection => connection.socket_id === id);
+
+  connectionInSupport.push(connection);
 
   const template = document.getElementById("admin_template").innerHTML;
 
@@ -93,8 +93,8 @@ function sendMessage(id) {
 }
 
 socket.on("admin_receive_message", (data) => {
-  const connection = connectionsUsers.find(
-    (connection) => (connection.socket_id = data.socket_id)
+  const connection = connectionInSupport.find(
+    connection => connection.socket_id === data.socket_id,
   );
 
   const divMessages = document.getElementById(
